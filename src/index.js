@@ -10,21 +10,14 @@ type Endpoints ={[string]: Endpoint};
 const schemaFromEndpoints = (endpoints: Endpoints, proxyUrl: ?(Function | string) = null) => {
   const rootType = new GraphQLObjectType({
     name: 'Query',
-    fields: () => ({
-      viewer: {
-        type: new GraphQLObjectType({
-          name: 'viewer',
-          fields: () => {
-            const queryFields = getQueriesFields(endpoints, false, proxyUrl);
-            if (!Object.keys(queryFields).length) {
-              throw new Error('Did not find any GET endpoints');
-            }
-            return queryFields;
-          }
-        }),
-        resolve: () => 'Without this resolver graphql does not resolve further'
-      }
-    })
+      fields: () => {
+        const queryFields = getQueriesFields(endpoints, false, proxyUrl);
+        if (!Object.keys(queryFields).length) {
+          throw new Error('Did not find any GET endpoints');
+        }
+        return queryFields;
+      },
+      resolve: () => 'Without this resolver graphql does not resolve further'
   });
 
   const graphQLSchema: RootGraphQLSchema = {
