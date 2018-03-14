@@ -9,7 +9,7 @@ const primitiveTypes = {
   string: graphql.GraphQLString,
   date: graphql.GraphQLString,
   integer: graphql.GraphQLInt,
-  number: graphql.GraphQLInt,
+  float: graphql.GraphQLFloat,
   boolean: graphql.GraphQLBoolean
 };
 
@@ -135,6 +135,13 @@ const getPrimitiveTypes = (jsonSchema: JSONSchemaType): GraphQLScalarType => {
   const format = jsonSchema.format;
   if (format === 'int64') {
     jsonType = 'string';
+  }
+  if(jsonType === 'number'){
+    if(format === 'double'){
+      jsonType = 'float';
+    } else {
+      jsonType = 'integer';
+    }
   }
   const type = primitiveTypes[jsonType];
   if (!type) {
